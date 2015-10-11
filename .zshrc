@@ -69,6 +69,7 @@ setopt nolistbeep
 
 # エイリアス
 alias ls="ls -F --color=auto"
+alias vim="env TERM=xterm-256color vim"
 
 # リダイレクトのマルチ化
 # http://news.mynavi.jp/column/zsh/007/
@@ -139,7 +140,7 @@ WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 setopt prompt_subst
 
 # mintty+percol用設定
-TERM=xterm
+export TERM=xterm
 
 # 外部ファイルの読み込み設定
 # http://news.mynavi.jp/column/zsh/006/
@@ -193,6 +194,4 @@ function insert-file-by-percol(){
 }
 zle -N insert-file-by-percol
 bindkey 'c' insert-file-by-percol
-
-
 
