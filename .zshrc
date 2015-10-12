@@ -195,3 +195,12 @@ function insert-file-by-percol(){
 zle -N insert-file-by-percol
 bindkey 'c' insert-file-by-percol
 
+# カレントディレクトリのファイルを複数選択して渡す
+function multiple-select-by-percol(){
+  LBUFFER=$LBUFFER$( ls . | percol | tr '\n' ' ' | \
+    sed 's/[[:space:]]*$//') # delete trailing space
+  zle -R -c
+}
+zle -N multiple-select-by-percol
+bindkey 'm' multiple-select-by-percol
+
