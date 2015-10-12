@@ -153,17 +153,17 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # シェルの履歴検索
 # https://gist.github.com/mitukiii/4234173
 function percol-select-history() {
-    local tac
-    if which tac > /dev/null; then
-        tac="tac"
-    else
-        tac="tail -r"
-    fi
-    BUFFER=$(history -n 1 | \
-        eval $tac | \
-        percol --match-method migemo --query "$LBUFFER")
-    CURSOR=$#BUFFER
-    zle clear-screen
+  local tac
+  if which tac > /dev/null; then
+    tac="tac"
+  else
+    tac="tail -r"
+  fi
+  BUFFER=$(history -n 1 | \
+    eval $tac | \
+    percol --match-method migemo --query "$LBUFFER")
+  CURSOR=$#BUFFER
+  zle clear-screen
 }
 zle -N percol-select-history
 bindkey '^r' percol-select-history
@@ -179,7 +179,7 @@ $HOME/Dropbox/
 $HOME/Documents/"
   fi
   SELECTED_FILE=$(echo $DOCUMENT_DIR | xargs find | \
-    grep -E "\.(pdf|txt|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method regex)
+    grep -E "\.(pdf|txt|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method migemo)
   if [ $? -eq 0 ]; then
     start $SELECTED_FILE
   fi
@@ -188,7 +188,7 @@ alias sd='search-document-by-percol'
 
 # カレントディレクトリ配下をインクリメンタルサーチしてプロンプトに追加
 function insert-file-by-percol(){
-  LBUFFER=$LBUFFER$( find . | percol --match-method regex | tr '\n' ' ' | \
+  LBUFFER=$LBUFFER$( find . | percol --match-method migemo | tr '\n' ' ' | \
     sed 's/[[:space:]]*$//') # delete trailing space
   zle -R -c
 }
