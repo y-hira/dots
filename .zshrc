@@ -178,8 +178,8 @@ function search-document-by-percol(){
 $HOME/Dropbox/
 $HOME/Documents/"
   fi
-  SELECTED_FILE=$(echo $DOCUMENT_DIR | xargs find | \
-    grep -E "\.(pdf|txt|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method migemo)
+  SELECTED_FILE=$(echo $DOCUMENT_DIR | \
+    locate -r "\.*(pdf|txt|md|markdown|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method migemo)
   if [ $? -eq 0 ]; then
     start $SELECTED_FILE
   fi
@@ -188,7 +188,7 @@ alias sd='search-document-by-percol'
 
 # カレントディレクトリ配下をインクリメンタルサーチしてプロンプトに追加
 function insert-file-by-percol(){
-  LBUFFER=$LBUFFER$( find . | percol --match-method migemo | tr '\n' ' ' | \
+  LBUFFER=$LBUFFER$( locate $(pwd) | percol --match-method migemo | tr '\n' ' ' | \
     sed 's/[[:space:]]*$//') # delete trailing space
   zle -R -c
 }
@@ -203,4 +203,15 @@ function multiple-select-by-percol(){
 }
 zle -N multiple-select-by-percol
 bindkey 'm' multiple-select-by-percol
+
+# zmvの設定
+# http://mollifier.hatenablog.com/entry/20101227/
+autoload -Uz zmv
+alias zmv='noglob zmv -W'
+
+# enhancdの設定
+# http://github.com/b4b4r07/enhancd.git
+if [ -f ~/enhancd/enhancd.sh ]; then
+  source ~/enhancd/enhancd.sh
+fi
 
