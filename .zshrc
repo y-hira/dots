@@ -178,8 +178,8 @@ function search-document-by-percol(){
 $HOME/Dropbox/
 $HOME/Documents/"
   fi
-  SELECTED_FILE=$(echo $DOCUMENT_DIR | \
-    locate -r "\.*(pdf|txt|md|markdown|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method migemo)
+  SELECTED_FILE=$(echo $DOCUMENT_DIR | xargs find | \
+    grep -E "\.*(pdf|txt|md|markdown|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method migemo)
   if [ $? -eq 0 ]; then
     start $SELECTED_FILE
   fi
@@ -188,7 +188,7 @@ alias sd='search-document-by-percol'
 
 # カレントディレクトリ配下をインクリメンタルサーチしてプロンプトに追加
 function insert-file-by-percol(){
-  LBUFFER=$LBUFFER$( locate $(pwd) | percol --match-method migemo | tr '\n' ' ' | \
+  LBUFFER=$LBUFFER$( find . | percol --match-method migemo | tr '\n' ' ' | \
     sed 's/[[:space:]]*$//') # delete trailing space
   zle -R -c
 }
@@ -215,3 +215,23 @@ if [ -f ~/enhancd/enhancd.sh ]; then
   source ~/enhancd/enhancd.sh
 fi
 
+# rmで削除するときにワンクッション置く
+# http://keisanbutsuriya.hateblo.jp/entry/2015/03/21/171333
+function trash-it(){
+  TRASHDIR="${HOME}/.Trash"
+  if [ ! -d $TRASHDIR ]; then
+    mkdir $TRASHDIR
+  fi
+  mv --backup=numbered --target-directory=$TRASHDIR $@
+  du -h $TRASHDIR
+}
+alias rm='trash-it'
+
+function trash-clear(){
+  TRASHDIR="${HOME}/.Trash"
+  if [ -d $TRASHDIR ]; then
+    \rm -rf ${TRASHDIR}
+  else
+    echo 'No trash.'
+  fi
+}
