@@ -211,9 +211,9 @@ alias zmv='noglob zmv -W'
 
 # enhancdの設定
 # http://github.com/b4b4r07/enhancd.git
-if [ -f ~/enhancd/enhancd.sh ]; then
-  source ~/enhancd/enhancd.sh
-fi
+# if [ -f ~/.enhancd/enhancd.sh ]; then
+#   source ~/.enhancd/enhancd.sh
+# fi
 
 # rmで削除するときにワンクッション置く
 # http://keisanbutsuriya.hateblo.jp/entry/2015/03/21/171333
@@ -235,3 +235,21 @@ function trash-clear(){
     echo 'No trash.'
   fi
 }
+
+# startコマンドで補完が効かない問題
+if which start > /dev/null; then
+  function mstart(){
+    for arg in $@
+    do
+      start $arg
+    done
+  }
+  alias start=mstart
+fi
+
+# カレントディレクトリをクリップボードに転送
+if [ -e /dev/clipboard ]; then
+  function cpwd(){
+    cygpath -w `pwd`/$1 > /dev/clipboard
+  }
+fi
