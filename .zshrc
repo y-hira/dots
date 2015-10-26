@@ -223,7 +223,7 @@ function trash-it(){
     mkdir $TRASHDIR
   fi
   mv --backup=numbered --target-directory=$TRASHDIR $@
-  du -h $TRASHDIR
+  du -sh $TRASHDIR
 }
 alias rm='trash-it'
 
