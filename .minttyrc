@@ -13,6 +13,7 @@ CopyAsRTF=no
 ClicksTargetApp=yes
 Locale=ja_JP
 Charset=UTF-8
+Scrollbar=none
 
 # https://github.com/oumu/mintty-color-schemes/blob/master/base16-solarized-mod.minttyrc
 /* ForegroundColour=147,161,161 */
