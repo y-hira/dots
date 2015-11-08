@@ -230,7 +230,9 @@ alias rm='trash-it'
 function trash-clear(){
   TRASHDIR="${HOME}/.Trash"
   if [ -d $TRASHDIR ]; then
+    BEFORE=`du $TRASHDIR`
     \rm -rf ${TRASHDIR}
+    echo "$BEFORE -> Trash cleared."
   else
     echo 'No trash.'
   fi
