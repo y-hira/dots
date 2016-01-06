@@ -69,7 +69,6 @@ setopt nolistbeep
 
 # エイリアス
 alias ls="ls -F --color=auto"
-alias vim="env TERM=xterm-256color vim"
 
 # リダイレクトのマルチ化
 # http://news.mynavi.jp/column/zsh/007/
