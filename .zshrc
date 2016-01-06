@@ -140,7 +140,7 @@ WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 setopt prompt_subst
 
 # mintty+percol用設定
-export TERM=xterm
+# export TERM=xterm
 
 # 外部ファイルの読み込み設定
 # http://news.mynavi.jp/column/zsh/006/
@@ -150,59 +150,65 @@ export TERM=xterm
 # 補完で小文字でも大文字にマッチさせる
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-# シェルの履歴検索
-# https://gist.github.com/mitukiii/4234173
-function percol-select-history() {
-  local tac
-  if which tac > /dev/null; then
-    tac="tac"
-  else
-    tac="tail -r"
-  fi
-  BUFFER=$(history -n 1 | \
-    eval $tac | \
-    percol --match-method migemo --query "$LBUFFER")
-  CURSOR=$#BUFFER
-  zle clear-screen
-}
-zle -N percol-select-history
-bindkey '^r' percol-select-history
+# percol 関連
 
-# ドキュメントファイルをインクリメンタルサーチ
-# http://d.hatena.ne.jp/kbkbkbkb1/20120429
-function search-document-by-percol(){
-  if [ $# -ge 1 ]; then
-    DOCUMENT_DIR=$*
-  else
-    DOCUMENT_DIR="\
-$HOME/Dropbox/
-$HOME/Documents/"
-  fi
-  SELECTED_FILE=$(echo $DOCUMENT_DIR | xargs find | \
-    grep -E "\.*(pdf|txt|md|markdown|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method migemo)
-  if [ $? -eq 0 ]; then
-    start $SELECTED_FILE
-  fi
-}
-alias sd='search-document-by-percol'
+if which percol > /dev/null; then
 
-# カレントディレクトリ配下をインクリメンタルサーチしてプロンプトに追加
-function insert-file-by-percol(){
-  LBUFFER=$LBUFFER$( find . | percol --match-method migemo | tr '\n' ' ' | \
-    sed 's/[[:space:]]*$//') # delete trailing space
-  zle -R -c
-}
-zle -N insert-file-by-percol
-bindkey 'c' insert-file-by-percol
+  # シェルの履歴検索
+  # https://gist.github.com/mitukiii/4234173
+  function percol-select-history() {
+    local tac
+    if which tac > /dev/null; then
+      tac="tac"
+    else
+      tac="tail -r"
+    fi
+    BUFFER=$(history -n 1 | \
+      eval $tac | \
+      percol --match-method migemo --query "$LBUFFER")
+    CURSOR=$#BUFFER
+    zle clear-screen
+  }
+  zle -N percol-select-history
+  bindkey '^r' percol-select-history
 
-# カレントディレクトリのファイルを複数選択して渡す
-function multiple-select-by-percol(){
-  LBUFFER=$LBUFFER$( ls . | percol | tr '\n' ' ' | \
-    sed 's/[[:space:]]*$//') # delete trailing space
-  zle -R -c
-}
-zle -N multiple-select-by-percol
-bindkey 'm' multiple-select-by-percol
+  # ドキュメントファイルをインクリメンタルサーチ
+  # http://d.hatena.ne.jp/kbkbkbkb1/20120429
+  function search-document-by-percol(){
+    if [ $# -ge 1 ]; then
+      DOCUMENT_DIR=$*
+    else
+      DOCUMENT_DIR="\
+  $HOME/Dropbox/
+  $HOME/Documents/"
+    fi
+    SELECTED_FILE=$(echo $DOCUMENT_DIR | xargs find | \
+      grep -E "\.*(pdf|txt|md|markdown|odp|odt|ods|pptx?|docx?|xlsx?|log)$" | percol --match-method migemo)
+    if [ $? -eq 0 ]; then
+      start $SELECTED_FILE
+    fi
+  }
+  alias sd='search-document-by-percol'
+
+  # カレントディレクトリ配下をインクリメンタルサーチしてプロンプトに追加
+  function insert-file-by-percol(){
+    LBUFFER=$LBUFFER$( find . | percol --match-method migemo | tr '\n' ' ' | \
+      sed 's/[[:space:]]*$//') # delete trailing space
+    zle -R -c
+  }
+  zle -N insert-file-by-percol
+  bindkey 'c' insert-file-by-percol
+
+  # カレントディレクトリのファイルを複数選択して渡す
+  function multiple-select-by-percol(){
+    LBUFFER=$LBUFFER$( ls . | percol | tr '\n' ' ' | \
+      sed 's/[[:space:]]*$//') # delete trailing space
+    zle -R -c
+  }
+  zle -N multiple-select-by-percol
+  bindkey 'm' multiple-select-by-percol
+
+fi
 
 # zmvの設定
 # http://mollifier.hatenablog.com/entry/20101227/
